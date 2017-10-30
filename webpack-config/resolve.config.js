@@ -1,5 +1,5 @@
 var path = require('path')
-var baseEntryDir = '../static_guojiang_tv/src/mobile/v2/'
+var baseEntryDir = '../static_grab/src/mobile/'
 
 const vue_source = process.env.NODE_ENV === 'production' ? path.resolve(__dirname, baseEntryDir + 'js/lib/vue.min.js') : path.resolve(__dirname, baseEntryDir + 'js/lib/vue.js')
 
