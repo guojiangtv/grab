@@ -75,6 +75,7 @@ gulp.task('copytrunk', function() {
                     .pipe(debug({title: 'static_grab:'}))
                     .pipe(gulp.dest( fs.realpathSync('./trunk/static_grab') ))
 			}else{
+				srcFile = srcFile.replace('grab/web/','')
 				gulp.src(srcFile, {base: './html'})    
                     .pipe(debug({title: 'grab:'}))
                     .pipe(gulp.dest( fs.realpathSync('./trunk/grab/web/html') ))
