@@ -41,6 +41,7 @@ gulp.task('copybeta', function() {
                     .pipe(gulp.dest( fs.realpathSync('./beta/static_grab') ))
 			}else{
 				srcFile = srcFile.replace('grab/web/','')
+
 				gulp.src(srcFile, {base: './html'})    
                     .pipe(debug({title: 'grab:'}))
                     .pipe(gulp.dest( fs.realpathSync('./beta/grab/web/html') ))
@@ -76,6 +77,7 @@ gulp.task('copytrunk', function() {
                     .pipe(gulp.dest( fs.realpathSync('./trunk/static_grab') ))
 			}else{
 				srcFile = srcFile.replace('grab/web/','')
+				
 				gulp.src(srcFile, {base: './html'})    
                     .pipe(debug({title: 'grab:'}))
                     .pipe(gulp.dest( fs.realpathSync('./trunk/grab/web/html') ))
