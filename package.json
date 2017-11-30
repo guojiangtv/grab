@@ -56,7 +56,10 @@
     "weixin-js-sdk": "^1.2.0"
   },
   "dependencies": {
-    "babel-polyfill": "^6.23.0"
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "promise-polyfill": "^6.1.0",
+    "vue-lazyload": "^1.1.4"
   },
   "browserslist": [
     "> 0.2%",
