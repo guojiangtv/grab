@@ -56,8 +56,10 @@
     "weixin-js-sdk": "^1.2.0"
   },
   "dependencies": {
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.23.0",
     "babel-preset-stage-0": "^6.24.1",
+    "babel-runtime": "^6.26.0",
     "promise-polyfill": "^6.1.0",
     "vue-lazyload": "^1.1.4"
   },
