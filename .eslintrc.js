@@ -4,27 +4,10 @@ module.exports = {
         "commonjs": true,
         "es6": true
     },
-    "extends": "eslint:recommended",
+    //"extends": "eslint:recommended",
     "parserOptions": {
         "sourceType": "module"
     },
     "rules": {
-        "indent": [
-            "error",
-            "tab"
-        ],
-        "linebreak-style": [
-            "off"
-        ],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "semi": [
-             2, "always"
-        ],
-        "no-console": [
-            "off"
-        ]
     }
 };
