@@ -46,7 +46,8 @@ module.exports = {
 	output: {
 		path: outDir,
 		publicPath: outPublicDir,
-		filename: 'js/[name].js?v=[chunkhash:8]'
+		filename: 'js/[name].js?v=[chunkhash:8]',
+		chunkFilename: "js/[name].chunk.js"
 	},
 	module: {
 		rules: [
@@ -98,6 +99,18 @@ module.exports = {
 					}
 				}
 			},
+			{
+        test: /\.(ttf|ttc|eot|svg|woff(2))$/,
+        loader: 'file-loader',
+        options:{
+        	name: function(p){
+						let tem_path = p.split(/\\fonts\\/)[1]
+						tem_path = tem_path.replace(/\\/g,'/')
+
+						return 'fonts/'+tem_path + '?v=[hash:8]'
+					}
+        }
+    	},
 			{
 				test: /\.html$/,
 				use: [ {
