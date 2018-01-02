@@ -1,24 +1,24 @@
 // 引入操作路径模块和webpack 
-var path = require('path')
-var webpack = require('webpack')
-var ExtractTextPlugin = require('extract-text-webpack-plugin') //抽离css
-var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+var path = require('path');
+var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin'); //抽离css
+var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
-var HashedChunkIdsPlugin = require('./webpack-config/hashedChunkIdsPlugin.js')
+var HashedChunkIdsPlugin = require('./webpack-config/hashedChunkIdsPlugin.js');
 
 //生产与开发环境配置
-var glob = require('glob')
-var prod = process.env.NODE_ENV === 'production' ? true : false //是否是生产环境
+var glob = require('glob');
+var prod = process.env.NODE_ENV === 'production' ? true : false; //是否是生产环境
 
 //webpack配置
-var postcssConfigDir = './webpack-config/postcss.config.js'
-var resolveConfigDir = './webpack-config/resolve.config.js'
+var postcssConfigDir = './webpack-config/postcss.config.js';
+var resolveConfigDir = './webpack-config/resolve.config.js';
 
 //目录配置
-var baseEntryDir = './static_grab/src/mobile/'
-var entryDir = baseEntryDir + '**/*.js'
-var outDir = path.resolve(__dirname, './static_grab/src/mobile')
-var outPublicDir = 'http://static.renqitv.cn/dist/mobile/'
+var baseEntryDir = './static_grab/src/mobile/';
+var entryDir = baseEntryDir + '**/*.js';
+var outDir = path.resolve(__dirname, './static_grab/src/mobile');
+var outPublicDir = 'http://static.renqitv.cn/dist/mobile/';
 
 module.exports = {
     /* 输入文件 */
@@ -29,7 +29,7 @@ module.exports = {
 	output: {
 		path: outDir,
 		publicPath: outPublicDir,
-		filename: 'js/lib/[name].js?v=[chunkhash:8]',
+		filename: 'js/lib/[name].[chunkhash:8].js',
 		library: '[name]_library'
 	},
 	module: {
@@ -75,10 +75,10 @@ module.exports = {
 				options: {
 					limit: 512,
 					name: function(p){
-						let tem_path = p.split(/\\img\\/)[1]
-						tem_path = tem_path.replace(/\\/g,'/')
+						let tem_path = p.split(/\\img\\/)[1];
+						tem_path = tem_path.replace(/\\/g,'/');
 
-						return 'img/'+tem_path + '?v=[hash:8]'
+						return 'img/'+tem_path + '?v=[hash:8]';
 					}
 				}
 			},
@@ -101,7 +101,7 @@ module.exports = {
 	      name: '[name]_library',  // 当前Dll的所有内容都会存放在这个参数指定变量名的一个全局变量下，注意与参数output.library保持一致
 	      context: __dirname, // 指定一个路径作为上下文环境，需要与DllReferencePlugin的context参数保持一致，建议统一设置为项目根目录
 	    }),
-		new ExtractTextPlugin('css/[name].css?v=[contenthash:8]'),
+		new ExtractTextPlugin('css/[name].[contenthash:8].css'),
     
 		new webpack.LoaderOptionsPlugin({
 			options: {
@@ -109,14 +109,14 @@ module.exports = {
 			},
 		})
 	]
-}
+};
 
 
 
 /***** 区分开发环境和生产环境 *****/
 
 if (prod) {
-	console.log('当前编译环境：production')
+	console.log('当前编译环境：production');
 
 	//module.exports.devtool = 'module-cheap-source-map'
 	module.exports.plugins = module.exports.plugins.concat([
@@ -138,9 +138,9 @@ if (prod) {
 				comments: false, // 去掉注释内容
 			}
 		})
-	])
+	]);
 } else {  
-	console.log('当前编译环境：dev')
+	console.log('当前编译环境：dev');
 
-	module.exports.devtool = 'cheap-module-source-map'
+	module.exports.devtool = 'cheap-module-source-map';
 }

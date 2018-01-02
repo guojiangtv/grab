@@ -1,43 +1,47 @@
 // 引入操作路径模块和webpack 
-var path = require('path')
-var webpack = require('webpack')
-var CleanWebpackPlugin = require('clean-webpack-plugin')
-var ExtractTextPlugin = require('extract-text-webpack-plugin') //抽离css
-var htmlWebpackPlugin = require('html-webpack-plugin')
-var BrowserSyncPlugin = require('browser-sync-webpack-plugin')
-var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
-var CopyWebpackPlugin = require('copy-webpack-plugin')
+var path = require('path');
+var webpack = require('webpack');
+var CleanWebpackPlugin = require('clean-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin'); //抽离css
+var htmlWebpackPlugin = require('html-webpack-plugin');
+var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
+var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
-var HashedChunkIdsPlugin = require('./webpack-config/hashedChunkIdsPlugin.js')
+var HashedChunkIdsPlugin = require('./webpack-config/hashedChunkIdsPlugin.js');
 
 //生产与开发环境配置
-var glob = require('glob')
-var prod = process.env.NODE_ENV === 'production' ? true : false //是否是生产环境
+var glob = require('glob');
+var prod = process.env.NODE_ENV === 'production' ? true : false; //是否是生产环境
 
 //webpack配置
-var eslintConfigDir = prod ? './webpack-config/.eslintrc.js' : './webpack-config/.eslintrc.dev.js'
-var postcssConfigDir = './webpack-config/postcss.config.js'
-var resolveConfigDir = './webpack-config/resolve.config.js'
+var eslintConfigDir = prod ? './webpack-config/.eslintrc.js' : './webpack-config/.eslintrc.dev.js';
+var postcssConfigDir = './webpack-config/postcss.config.js';
+var resolveConfigDir = './webpack-config/resolve.config.js';
 
 //目录配置
-var baseEntryDir = './static_grab/src/mobile/'
-var entryDir = baseEntryDir + '**/*.js'
-var outDir = path.resolve(__dirname, './static_grab/dist/mobile')
-var outPublicDir = 'http://static.renqitv.cn/dist/mobile/'
-var basePageEntry = './html/mobile/'
-var browserSyncBaseDir = './html/mobile/dist'
+var baseEntryDir = './static_grab/src/mobile/';
+var entryDir = baseEntryDir + '**/*.js';
+var outDir = path.resolve(__dirname, './static_grab/dist/mobile');
+var outPublicDir = 'http://static.renqitv.cn/dist/mobile/';
+var basePageEntry = './html/mobile/';
+var browserSyncBaseDir = './html/mobile/dist';
 //clean folder
 var cleanFolder = [
-					path.resolve(__dirname, './html/mobile/dist'), 
-					path.resolve(__dirname, './static_grab/dist/mobile/css'), 
-					path.resolve(__dirname, './static_grab/dist/mobile/js')
-				]
+	path.resolve(__dirname, './html/mobile/dist'), 
+	path.resolve(__dirname, './static_grab/dist/mobile/css'), 
+	path.resolve(__dirname, './static_grab/dist/mobile/js')
+];
+
+var cleanMaps = [
+	path.resolve(__dirname, './static_grab/dist/mobile/js/**/*.map')
+];
 
 //入口js文件配置以及公共模块配置
-var entries = getEntry(entryDir) 
-entries.vendors = ['common','wxShare']
+var entries = getEntry(entryDir); 
+entries.vendors = ['common','wxShare'];
 
-console.log(entries)
+console.log(entries);
 
 module.exports = {
     /* 输入文件 */
@@ -46,8 +50,8 @@ module.exports = {
 	output: {
 		path: outDir,
 		publicPath: outPublicDir,
-		filename: 'js/[name].js?v=[chunkhash:8]',
-		chunkFilename: "js/[name].chunk.js"
+		filename: 'js/[name].[chunkhash:8].js',
+		chunkFilename: 'js/[name]-chunk.[chunkhash:8].js'
 	},
 	module: {
 		rules: [
@@ -92,25 +96,25 @@ module.exports = {
 				options: {
 					limit: 5120,
 					name: function(p){
-						let tem_path = p.split(/\\img\\/)[1]
-						tem_path = tem_path.replace(/\\/g,'/')
+						let tem_path = p.split(/\\img\\/)[1];
+						tem_path = tem_path.replace(/\\/g,'/');
 
-						return 'img/'+tem_path + '?v=[hash:8]'
+						return 'img/'+tem_path + '?v=[hash:8]';
 					}
 				}
 			},
 			{
-        test: /\.(ttf|ttc|eot|svg|woff(2))$/,
-        loader: 'file-loader',
-        options:{
-        	name: function(p){
-						let tem_path = p.split(/\\fonts\\/)[1]
-						tem_path = tem_path.replace(/\\/g,'/')
+				test: /\.(ttf|ttc|eot|svg|woff(2))$/,
+				loader: 'file-loader',
+				options:{
+					name: function(p){
+						let tem_path = p.split(/\\fonts\\/)[1];
+						tem_path = tem_path.replace(/\\/g,'/');
 
-						return 'fonts/'+tem_path + '?v=[hash:8]'
+						return 'fonts/'+tem_path + '?v=[hash:8]';
 					}
-        }
-    	},
+				}
+			},
 			{
 				test: /\.html$/,
 				use: [ {
@@ -136,7 +140,7 @@ module.exports = {
 			server: { baseDir: [browserSyncBaseDir] }
 		}),
 
-		new ExtractTextPlugin('css/[name].css?v=[contenthash:8]'),
+		new ExtractTextPlugin('css/[name].[chunkhash:8].css'),
     
 		new webpack.LoaderOptionsPlugin({
 			options: {
@@ -147,23 +151,29 @@ module.exports = {
 
     	// 提取公共模块
 		new webpack.optimize.CommonsChunkPlugin({
-			names:  ['vendors', 'manifest'], // 公共模块的名称
+			names:  ['vendors'], // 公共模块的名称
       		//filename: 'js/vendors-[hash:6].js', // 公共模块的名称
+			chunks: 'vendors',  // chunks是需要提取的模块
+			minChunks: Infinity  //公共模块最小被引用的次数
+		}),
+		new webpack.optimize.CommonsChunkPlugin({
+			names:  ['manifest'], // 公共模块的名称
+      		filename: 'js/manifest.js', // 公共模块的名称
 			chunks: 'vendors',  // chunks是需要提取的模块
 			minChunks: Infinity  //公共模块最小被引用的次数
 		}),
 		new CopyWebpackPlugin([
             { from: baseEntryDir + 'js/lib', to: 'js/lib' },
-        ])
+		])
 	]
-}
+};
 
 
 
 
 /***** 生成组合后的html *****/
 
-var pages = getEntry(basePageEntry + 'src/**/*.ejs')
+var pages = getEntry(basePageEntry + 'src/**/*.ejs');
 for (var pathname in pages) {
 
 	var conf = {
@@ -175,14 +185,14 @@ for (var pathname in pages) {
 			removeComments: true,
 			collapseWhitespace: false
 		}
-	}
+	};
 	if (pathname in module.exports.entry) {
-		conf.chunks = [pathname, 'vendors']
+		conf.chunks = [pathname, 'vendors'];
 	}else{
-		conf.chunks = ['vendors']
+		conf.chunks = ['vendors'];
 	}	
 
-	module.exports.plugins.push(new htmlWebpackPlugin(conf))
+	module.exports.plugins.push(new htmlWebpackPlugin(conf));
 }
 
 
@@ -191,7 +201,7 @@ for (var pathname in pages) {
 /***** 获取文件列表(仅支持js和ejs文件)：输出正确的js和html路径 *****/
 
 function getEntry(globPath) {
-	var entries = {}, basename
+	var entries = {}, basename;
 
 	glob.sync(globPath).forEach(function (entry) {
 
@@ -199,16 +209,16 @@ function getEntry(globPath) {
 		if(entry.indexOf('layouts') == -1 && entry.indexOf('lib') == -1 && entry.indexOf('component') == -1){
 
 			//判断是js文件还是ejs模板文件
-			let isJsFile = entry.indexOf('.js') !== -1
+			let isJsFile = entry.indexOf('.js') !== -1;
 			let dirArr = isJsFile ? 
 						entry.split('/js/')[1].split('.js')[0].split('/') :
-						entry.split('html/mobile/src/')[1].split('.ejs')[0].split('/')
+						entry.split('html/mobile/src/')[1].split('.ejs')[0].split('/');
 			
-			basename = dirArr.join('/')
-			entries[basename] = entry
+			basename = dirArr.join('/');
+			entries[basename] = entry;
 		}
-	})
-	return entries
+	});
+	return entries;
 }
 
 
@@ -217,11 +227,11 @@ function getEntry(globPath) {
 /***** 区分开发环境和生产环境 *****/
 
 if (prod) {
-	console.log('当前编译环境：production')
+	console.log('当前编译环境：production');
 
 	//module.exports.devtool = 'module-cheap-source-map'
 	module.exports.plugins = module.exports.plugins.concat([
-		new CleanWebpackPlugin( cleanFolder ),
+		new CleanWebpackPlugin( cleanMaps ),
     	//压缩css代码
 		new OptimizeCssAssetsPlugin({
 			assetNameRegExp: /\.css\.*(?!.*map)/g,  //注意不要写成 /\.css$/g
@@ -243,9 +253,9 @@ if (prod) {
 				comments: false, // 去掉注释内容
 			}
 		})
-	])
+	]);
 } else {  
-	console.log('当前编译环境：dev')
+	console.log('当前编译环境：dev');
 
-	module.exports.devtool = 'cheap-module-source-map'
+	module.exports.devtool = 'cheap-module-source-map';
 }
