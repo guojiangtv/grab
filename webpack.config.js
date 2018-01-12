@@ -151,17 +151,17 @@ module.exports = {
 
     	// 提取公共模块
 		new webpack.optimize.CommonsChunkPlugin({
-			names:  ['vendors'], // 公共模块的名称
+			names:  ['vendors', 'manifest'], // 公共模块的名称
       		//filename: 'js/vendors-[hash:6].js', // 公共模块的名称
 			chunks: 'vendors',  // chunks是需要提取的模块
 			minChunks: Infinity  //公共模块最小被引用的次数
 		}),
-		new webpack.optimize.CommonsChunkPlugin({
+		/*new webpack.optimize.CommonsChunkPlugin({
 			names:  ['manifest'], // 公共模块的名称
       		filename: 'js/manifest.js', // 公共模块的名称
 			chunks: 'vendors',  // chunks是需要提取的模块
 			minChunks: Infinity  //公共模块最小被引用的次数
-		}),
+		}),*/
 		new CopyWebpackPlugin([
             { from: baseEntryDir + 'js/lib', to: 'js/lib' },
 		])
@@ -187,9 +187,9 @@ for (var pathname in pages) {
 		}
 	};
 	if (pathname in module.exports.entry) {
-		conf.chunks = [pathname, 'vendors'];
+		conf.chunks = [pathname, 'vendors', 'manifest'];
 	}else{
-		conf.chunks = ['vendors'];
+		conf.chunks = ['vendors', 'manifest'];
 	}	
 
 	module.exports.plugins.push(new htmlWebpackPlugin(conf));
