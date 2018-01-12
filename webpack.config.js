@@ -140,7 +140,7 @@ module.exports = {
 			server: { baseDir: [browserSyncBaseDir] }
 		}),
 
-		new ExtractTextPlugin('css/[name].[chunkhash:8].css'),
+		new ExtractTextPlugin('css/[name].[contenthash:8].css'),
     
 		new webpack.LoaderOptionsPlugin({
 			options: {
@@ -231,7 +231,7 @@ if (prod) {
 
 	//module.exports.devtool = 'module-cheap-source-map'
 	module.exports.plugins = module.exports.plugins.concat([
-		new CleanWebpackPlugin( cleanMaps ),
+		new CleanWebpackPlugin( cleanFolder ),
     	//压缩css代码
 		new OptimizeCssAssetsPlugin({
 			assetNameRegExp: /\.css\.*(?!.*map)/g,  //注意不要写成 /\.css$/g
